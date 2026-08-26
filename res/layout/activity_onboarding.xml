@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:background="@color/background"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:paddingLeft="32dp" android:paddingRight="32dp">
+
+        <Space android:layout_width="1dp" android:layout_height="0dp"
+            android:layout_weight="1"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/brand_line"
+            android:textSize="13sp"
+            android:textColor="@color/gold"
+            android:fontFamily="sans-serif-medium"
+            android:letterSpacing="0.3"/>
+
+        <ImageView
+            android:layout_width="92dp" android:layout_height="92dp"
+            android:layout_marginTop="26dp"
+            android:src="@mipmap/ic_launcher"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="26dp"
+            android:gravity="center"
+            android:text="@string/onboard_title"
+            android:textSize="24sp"
+            android:textColor="@color/text"
+            android:fontFamily="sans-serif-medium"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:lineSpacingExtra="4dp"
+            android:text="@string/onboard_body"
+            android:textSize="14sp"
+            android:textColor="@color/text_sub"/>
+
+        <TextView style="@style/FieldLabel" android:text="@string/set_yourname"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginTop="36dp" android:layout_marginBottom="7dp"/>
+
+        <EditText android:id="@+id/owner_name"
+            style="@style/Input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/onboard_name_hint"
+            android:inputType="textPersonName|textCapWords"
+            android:singleLine="true"/>
+
+        <Button android:id="@+id/start_btn"
+            style="@style/BtnPrimary"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:layout_marginTop="26dp"
+            android:text="@string/onboard_start"/>
+
+        <Space android:layout_width="1dp" android:layout_height="0dp"
+            android:layout_weight="1.2"/>
+    </LinearLayout>
+</ScrollView>

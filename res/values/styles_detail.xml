@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="ActionCol">
+        <item name="android:orientation">vertical</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="ActionBtn">
+        <item name="android:scaleType">center</item>
+        <item name="android:background">@drawable/bg_action</item>
+    </style>
+
+    <style name="ActionLabel">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/text_sub</item>
+    </style>
+
+    <style name="StatCell">
+        <item name="android:orientation">vertical</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="StatValue">
+        <item name="android:textSize">17sp</item>
+        <item name="android:textColor">@color/text</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <style name="StatLabel">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/text_sub</item>
+    </style>
+</resources>

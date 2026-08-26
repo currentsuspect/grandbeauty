@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp" android:height="108dp"
+    android:viewportWidth="108" android:viewportHeight="108">
+    <!-- calendar body -->
+    <path
+        android:fillColor="#F2D8E0"
+        android:pathData="M36,30 h36 a6,6 0 0 1 6,6 v34 a6,6 0 0 1 -6,6 h-36 a6,6 0 0 1 -6,-6 v-34 a6,6 0 0 1 6,-6 z M36,44 v24 h36 v-24 z"/>
+    <!-- binder rings -->
+    <path
+        android:strokeColor="#D4B36A"
+        android:strokeWidth="5"
+        android:strokeLineCap="round"
+        android:pathData="M43,24 v9 M65,24 v9"/>
+    <!-- check -->
+    <path
+        android:strokeColor="#D4B36A"
+        android:strokeWidth="6"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M45,55 l7,7 l14,-13"/>
+</vector>

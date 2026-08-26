@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:background="@drawable/bg_card"
+    android:layout_marginLeft="10dp" android:layout_marginRight="10dp"
+    android:layout_marginTop="5dp" android:layout_marginBottom="5dp"
+    android:paddingLeft="14dp" android:paddingRight="14dp"
+    android:paddingTop="12dp" android:paddingBottom="12dp">
+
+    <FrameLayout
+        android:layout_width="46dp" android:layout_height="46dp"
+        android:background="@drawable/bg_avatar">
+
+        <TextView android:id="@+id/initials"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textSize="16sp"
+            android:textColor="@color/on_primary_container"
+            android:fontFamily="sans-serif-medium"/>
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginLeft="13dp"
+        android:orientation="vertical">
+
+        <TextView android:id="@+id/c_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:textColor="@color/text"
+            android:fontFamily="sans-serif-medium"
+            android:singleLine="true"
+            android:ellipsize="end"/>
+
+        <TextView android:id="@+id/c_sub"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:textSize="13sp"
+            android:textColor="@color/text_sub"
+            android:singleLine="true"
+            android:ellipsize="end"/>
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="17dp" android:layout_height="17dp"
+        android:src="@drawable/ic_chev_s"/>
+</LinearLayout>

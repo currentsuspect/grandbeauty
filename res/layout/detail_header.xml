@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:paddingTop="10dp" android:paddingBottom="6dp">
+
+    <FrameLayout
+        android:layout_width="84dp" android:layout_height="84dp"
+        android:background="@drawable/bg_avatar">
+
+        <TextView android:id="@+id/initials"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textSize="30sp"
+            android:textColor="@color/on_primary_container"
+            android:fontFamily="sans-serif-medium"/>
+    </FrameLayout>
+
+    <TextView android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:textSize="23sp"
+        android:textColor="@color/text"
+        android:fontFamily="sans-serif-medium"/>
+
+    <TextView android:id="@+id/phone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:textSize="15sp"
+        android:textColor="@color/text_sub"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp"
+        android:paddingLeft="40dp" android:paddingRight="40dp">
+
+        <LinearLayout style="@style/ActionCol"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+            <ImageView android:id="@+id/call_btn" style="@style/ActionBtn"
+                android:layout_width="54dp"
+                android:layout_height="54dp"
+                android:src="@drawable/ic_phone_a"/>
+            <TextView style="@style/ActionLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="7dp"
+                android:text="@string/call"/>
+        </LinearLayout>
+
+        <Space android:layout_width="16dp" android:layout_height="1dp"/>
+
+        <LinearLayout style="@style/ActionCol"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+            <ImageView android:id="@+id/sms_btn" style="@style/ActionBtn"
+                android:layout_width="54dp"
+                android:layout_height="54dp"
+                android:src="@drawable/ic_sms_a"/>
+            <TextView style="@style/ActionLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="7dp"
+                android:text="@string/sms"/>
+        </LinearLayout>
+
+        <Space android:layout_width="16dp" android:layout_height="1dp"/>
+
+        <LinearLayout style="@style/ActionCol"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+            <ImageView android:id="@+id/wa_btn" style="@style/ActionBtn"
+                android:layout_width="54dp"
+                android:layout_height="54dp"
+                android:src="@drawable/ic_wa_a"/>
+            <TextView style="@style/ActionLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="7dp"
+                android:text="@string/whatsapp"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginLeft="16dp" android:layout_marginRight="16dp"
+        android:layout_marginTop="22dp"
+        android:background="@drawable/bg_card"
+        android:paddingTop="14dp" android:paddingBottom="14dp">
+
+        <LinearLayout style="@style/StatCell"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+            <TextView android:id="@+id/stat_visits" style="@style/StatValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <TextView style="@style/StatLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="@string/stat_visits"/>
+        </LinearLayout>
+
+        <LinearLayout style="@style/StatCell"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+            <TextView android:id="@+id/stat_total" style="@style/StatValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <TextView style="@style/StatLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="@string/stat_total"/>
+        </LinearLayout>
+
+        <LinearLayout style="@style/StatCell"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+            <TextView android:id="@+id/stat_balance" style="@style/StatValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <TextView style="@style/StatLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="@string/balance"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView android:id="@+id/settle_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="44dp"
+        android:gravity="center"
+        android:paddingLeft="22dp" android:paddingRight="22dp"
+        android:layout_marginTop="12dp"
+        android:textSize="14sp"
+        android:textColor="@color/on_secondary_container"
+        android:fontFamily="sans-serif-medium"
+        android:background="@drawable/bg_settle"
+        android:visibility="gone"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/tab_bookings"
+        android:textSize="12sp"
+        android:textColor="@color/primary"
+        android:fontFamily="sans-serif-medium"
+        android:letterSpacing="0.08"
+        android:textAllCaps="true"
+        android:paddingLeft="26dp"
+        android:paddingTop="18dp" android:paddingBottom="7dp"/>
+</LinearLayout>

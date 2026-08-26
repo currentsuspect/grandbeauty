@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:background="@drawable/bg_card"
+    android:layout_marginLeft="10dp" android:layout_marginRight="10dp"
+    android:layout_marginTop="5dp" android:layout_marginBottom="5dp"
+    android:paddingLeft="14dp" android:paddingRight="10dp"
+    android:paddingTop="13dp" android:paddingBottom="13dp">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView android:id="@+id/time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="17sp"
+            android:textColor="@color/text"
+            android:fontFamily="sans-serif-medium"/>
+
+        <TextView android:id="@+id/ampm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="11sp"
+            android:textColor="@color/text_sub"
+            android:fontFamily="sans-serif-medium"/>
+    </LinearLayout>
+
+    <View
+        android:layout_width="1.5dp" android:layout_height="30dp"
+        android:layout_marginLeft="14dp" android:layout_marginRight="14dp"
+        android:background="@color/outline"/>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView android:id="@+id/client_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:textColor="@color/text"
+            android:fontFamily="sans-serif-medium"
+            android:singleLine="true"
+            android:ellipsize="end"/>
+
+        <TextView android:id="@+id/meta"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:textSize="13sp"
+            android:textColor="@color/text_sub"
+            android:singleLine="true"
+            android:ellipsize="end"/>
+    </LinearLayout>
+
+    <FrameLayout android:id="@+id/done_btn"
+        android:layout_width="40dp" android:layout_height="40dp"
+        android:layout_marginLeft="6dp"
+        android:background="@drawable/bg_check_btn">
+
+        <ImageView
+            android:layout_width="20dp" android:layout_height="20dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_check_d"/>
+    </FrameLayout>
+
+    <TextView android:id="@+id/status_pill"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:paddingLeft="10dp" android:paddingRight="10dp"
+        android:paddingTop="4dp" android:paddingBottom="4dp"
+        android:textSize="11sp"
+        android:fontFamily="sans-serif-medium"
+        android:letterSpacing="0.05"/>
+</LinearLayout>

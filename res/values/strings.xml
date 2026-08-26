@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Grand Beauty</string>
+
+    <string name="tab_bookings">Bookings</string>
+    <string name="tab_clients">Clients</string>
+    <string name="tab_settings">Settings</string>
+
+    <string name="search_hint">Search name or service…</string>
+    <string name="new_appt">New appointment</string>
+    <string name="new_client">New client</string>
+
+    <string name="empty_bookings_title">Nothing booked yet</string>
+    <string name="empty_bookings_body">Tap + to add your first appointment.\nReminders will pop up before each one.</string>
+    <string name="empty_clients_title">No clients yet</string>
+    <string name="empty_clients_body">Add a client once and reuse them\nfor every future booking.</string>
+    <string name="empty_results_title">No matches</string>
+    <string name="empty_results_body">Try a different name or service.</string>
+
+    <string name="fld_client">Client</string>
+    <string name="fld_date">Date</string>
+    <string name="fld_time">Time</string>
+    <string name="fld_service">Service</string>
+    <string name="fld_service_hint">e.g. Braids, Manicure, Consultation</string>
+    <string name="fld_amount">Amount (optional)</string>
+    <string name="fld_notes">Notes</string>
+    <string name="fld_notes_hint">Colours used, allergies, requests…</string>
+    <string name="fld_name">Name</string>
+    <string name="fld_phone">Phone</string>
+    <string name="reminder_on">Remind me</string>
+    <string name="status_upcoming">Upcoming</string>
+    <string name="status_done">Done</string>
+    <string name="status_cancelled">Cancelled</string>
+    <string name="save">Save</string>
+    <string name="delete">Delete</string>
+    <string name="call">Call</string>
+    <string name="sms">Text</string>
+    <string name="whatsapp">WhatsApp</string>
+    <string name="edit">Edit</string>
+
+    <string name="stat_visits">Visits</string>
+    <string name="stat_total">Total</string>
+    <string name="stat_last">Last visit</string>
+    <string name="stat_next">Next booking</string>
+    <string name="no_phone">No phone number saved</string>
+
+    <string name="settings_title">Settings</string>
+    <string name="set_yourname">Your name (for greetings)</string>
+    <string name="set_yourname_hint">Leave empty for “Welcome”</string>
+    <string name="set_lead">Reminder timing</string>
+    <string name="set_daily">Morning summary</string>
+    <string name="set_daily_sub">A notification at 8:00 am with today’s bookings</string>
+    <string name="set_exact_ok">Reminders are set to arrive exactly on time.</string>
+    <string name="set_exact_no">Alarms &amp; reminders permission is off. Tap to allow exact reminders.</string>
+    <string name="set_export">Export backup (CSV)</string>
+    <string name="set_export_sub">Save every client and booking to your Downloads folder</string>
+    <string name="set_share">Share this week</string>
+    <string name="set_share_sub">Send your next 7 days of bookings to anyone</string>
+    <string name="set_about">Grand Beauty · your salon, in your pocket. Fully offline.\nYour data never leaves this phone.</string>
+
+    <string name="notif_channel_appts">Appointment reminders</string>
+    <string name="notif_channel_daily">Morning summary</string>
+    <string name="notif_reminder_title">Upcoming: %1$s</string>
+    <string name="notif_reminder_body">%1$s · %2$s%3$s</string>
+    <string name="notif_daily_title">Today at the salon</string>
+    <plurals name="notif_daily_body">
+        <item quantity="one">%1$d appointment today</item>
+        <item quantity="other">%1$d appointments today</item>
+    </plurals>
+    <plurals name="attention_count">
+        <item quantity="one">%1$d past booking needs marking</item>
+        <item quantity="other">%1$d past bookings need marking</item>
+    </plurals>
+    <plurals name="visits_count">
+        <item quantity="one">%1$d visit</item>
+        <item quantity="other">%1$d visits</item>
+    </plurals>
+
+    <string name="brand_line">GRAND BEAUTY</string>
+
+    <string name="onboard_title">Your salon, in your pocket</string>
+    <string name="onboard_body">Every client, every booking, every shilling —\nremembered for you. Works offline, always.</string>
+    <string name="onboard_name_hint">e.g. Mama Grace</string>
+    <string name="onboard_start">Start booking</string>
+
+    <string name="fld_paid">Amount paid (optional)</string>
+    <string name="fld_paid_hint">Leave empty if fully paid</string>
+    <string name="past_hint">Past visit — will be saved to history</string>
+    <string name="already_booked">Note: %1$s already has a booking at this time</string>
+
+    <string name="section_attention">Needs attention</string>
+    <string name="section_history">History</string>
+    <string name="owes">Owes %1$s</string>
+    <string name="settle">Settle %1$s</string>
+    <string name="settled">Balance cleared</string>
+    <string name="balance">Balance</string>
+
+    <string name="empty_bookings_cta">Add first appointment</string>
+    <string name="empty_clients_cta">Add first client</string>
+
+    <string name="set_regulars">Check in on regulars</string>
+    <string name="set_regulars_sub">A gentle nudge when a client hasn\'t visited in over a month</string>
+    <string name="notif_channel_checkins">Regular check-ins</string>
+    <string name="notif_checkin_title">Time to reach out</string>
+    <string name="notif_checkin_body">%1$s hasn\'t visited in %2$d weeks. A quick hello keeps them close.</string>
+    <string name="notif_daily_owed">You\'re owed %1$s across %2$d client(s)</string>
+    <string name="notif_daily_first">First at %1$s — %2$s</string>
+    <string name="notif_daily_expect">Expecting %1$s from %2$d booking(s)</string>
+
+    <string name="err_need_client">Pick or add a client first</string>
+    <string name="err_need_service">What is the service?</string>
+    <string name="saved">Saved</string>
+    <string name="deleted">Deleted</string>
+    <string name="exported_to">Saved to %1$s</string>
+    <string name="export_failed">Export failed</string>
+    <string name="confirm_delete_appt">Delete this appointment?</string>
+    <string name="confirm_delete_client">Delete this client and their appointments?</string>
+    <string name="cancel">Cancel</string>
+    <string name="mark_done">Mark done</string>
+    <string name="mark_cancelled">Mark cancelled</string>
+    <string name="reopen">Reopen</string>
+    <string name="past_section">Needs attention</string>
+</resources>

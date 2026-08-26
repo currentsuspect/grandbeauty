@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="DateCol">
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="PickBtn">
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingLeft">14dp</item>
+        <item name="android:paddingRight">14dp</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/text</item>
+        <item name="android:drawablePadding">10dp</item>
+        <item name="android:background">@drawable/bg_input</item>
+    </style>
+</resources>

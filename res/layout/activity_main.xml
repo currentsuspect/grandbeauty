@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:background="@color/background">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="20dp" android:paddingRight="20dp"
+            android:paddingTop="14dp" android:paddingBottom="4dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/brand_line"
+            android:textSize="10sp"
+            android:textColor="@color/gold"
+            android:fontFamily="sans-serif-medium"
+            android:letterSpacing="0.28"/>
+
+            <TextView android:id="@+id/greeting"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="13sp"
+                android:textColor="@color/text_sub"
+                android:fontFamily="sans-serif-medium"/>
+
+            <TextView android:id="@+id/title"
+                style="@style/TextTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"/>
+        </LinearLayout>
+
+        <EditText android:id="@+id/search"
+            style="@style/Input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp" android:layout_marginRight="20dp"
+            android:layout_marginTop="12dp" android:layout_marginBottom="6dp"
+            android:hint="@string/search_hint"
+            android:inputType="textPersonName"
+            android:drawableStart="@drawable/ic_search_s"
+            android:drawablePadding="10dp"
+            android:background="@drawable/bg_card"/>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <ListView android:id="@+id/list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:divider="@null"
+                android:dividerHeight="0dp"
+                android:clipToPadding="false"
+                android:scrollbars="none"
+                android:listSelector="@android:color/transparent"
+                android:paddingTop="6dp" android:paddingBottom="110dp"
+                android:paddingLeft="8dp" android:paddingRight="8dp"/>
+
+            <LinearLayout android:id="@+id/empty"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:visibility="gone">
+
+                <ImageView
+                    android:layout_width="58dp" android:layout_height="58dp"
+                    android:src="@drawable/ic_empty_cal"
+                    android:alpha="0.9"/>
+
+                <TextView android:id="@+id/empty_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:textSize="17sp"
+                    android:textColor="@color/text"
+                    android:fontFamily="sans-serif-medium"/>
+
+                <TextView android:id="@+id/empty_body"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:gravity="center"
+                    android:lineSpacingExtra="3dp"
+                    android:textSize="14sp"
+                    android:textColor="@color/text_sub"/>
+
+                <TextView android:id="@+id/empty_cta"
+                    android:layout_width="wrap_content"
+                    android:layout_height="44dp"
+                    android:layout_marginTop="20dp"
+                    android:gravity="center"
+                    android:paddingLeft="22dp" android:paddingRight="22dp"
+                    android:text="@string/empty_bookings_cta"
+                    android:textSize="14sp"
+                    android:textColor="@color/on_primary_container"
+                    android:fontFamily="sans-serif-medium"
+                    android:background="@drawable/bg_cta"/>
+            </LinearLayout>
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="66dp"
+            android:orientation="horizontal"
+            android:background="@color/surface"
+            android:elevation="10dp">
+
+            <LinearLayout android:id="@+id/nav_bookings"
+                style="@style/NavItem"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+                <ImageView style="@style/NavIcon"
+                    android:layout_width="23dp"
+                    android:layout_height="23dp"
+                    android:src="@drawable/ic_tab_cal_off"/>
+                <TextView style="@style/NavLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:text="@string/tab_bookings"/>
+            </LinearLayout>
+
+            <LinearLayout android:id="@+id/nav_clients"
+                style="@style/NavItem"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+                <ImageView style="@style/NavIcon"
+                    android:layout_width="23dp"
+                    android:layout_height="23dp"
+                    android:src="@drawable/ic_tab_people_off"/>
+                <TextView style="@style/NavLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:text="@string/tab_clients"/>
+            </LinearLayout>
+
+            <LinearLayout android:id="@+id/nav_settings"
+                style="@style/NavItem"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+                <ImageView style="@style/NavIcon"
+                    android:layout_width="23dp"
+                    android:layout_height="23dp"
+                    android:src="@drawable/ic_tab_gear_off"/>
+                <TextView style="@style/NavLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:text="@string/tab_settings"/>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <FrameLayout android:id="@+id/fab"
+        android:layout_width="62dp"
+        android:layout_height="62dp"
+        android:layout_gravity="bottom|end"
+        android:layout_marginRight="22dp"
+        android:layout_marginBottom="92dp"
+        android:background="@drawable/bg_fab"
+        android:elevation="12dp">
+
+        <ImageView
+            android:layout_width="28dp" android:layout_height="28dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_plus"/>
+    </FrameLayout>
+</FrameLayout>
