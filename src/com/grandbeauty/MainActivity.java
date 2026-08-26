@@ -9,8 +9,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.ContextMenu;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -57,52 +55,70 @@ public class MainActivity extends Activity {
             @Override public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this, tab == TAB_BOOK
                         ? EditApptActivity.class : EditClientActivity.class));
+                overridePendingTransition(R.anim.slide_in, R.anim.fade_out);
             }
         });
 
-        apptAdapter = new Adapters.ApptsAdapter(this, null, false, new Adapters.QuickDone() {
-            @Override public void onQuickDone(Appt a) {
-                Db.get(MainActivity.this).setStatus(a.id, Appt.DONE);
-                Alarms.cancelAppt(MainActivity.this, a.id);
-                reload();
-            }
-        });
+        apptAdapter = new Adapters.ApptsAdapter(this, null, false,
+                new Adapters.RowMenu() {
+                    @Override public void onRowMenu(Appt a, View anchor) {
+                        Adapters.apptMenu(MainActivity.this, anchor, a, host);
+                    }
+                });
         clientAdapter = new Adapters.ClientsAdapter(this,
                 new HashMap<Long, Long>(), new HashMap<Long, Double>());
 
         search.addTextChangedListener(new TextWatcher() {
+            private final android.os.Handler h = new android.os.Handler();
+            private final Runnable run = () -> {
+                query = search.getText().toString();
+                reload();
+            };
             public void beforeTextChanged(CharSequence s, int a, int b2, int c) {}
             public void onTextChanged(CharSequence s, int a, int b2, int c) {}
             public void afterTextChanged(Editable s) {
-                query = s.toString();
-                reload();
+                h.removeCallbacks(run);
+                h.postDelayed(run, 160);
             }
         });
 
         list.setAdapter(apptAdapter);
-        registerForContextMenu(list);
+        list.setLayoutAnimation(new android.view.animation.LayoutAnimationController(
+                android.view.animation.AnimationUtils.loadAnimation(this, R.anim.item_fall),
+                0.04f));
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override public void onItemClick(AdapterView<?> p, View v, int pos, long id) {
                 Object o = p.getItemAtPosition(pos);
-                if (tab == TAB_BOOK && o instanceof Appt) {
-                    Intent i = new Intent(MainActivity.this, EditApptActivity.class);
-                    i.putExtra("id", ((Appt) o).id);
-                    startActivity(i);
-                } else if (tab == TAB_CLIENTS && o instanceof Client) {
-                    Intent i = new Intent(MainActivity.this, ClientDetailActivity.class);
-                    i.putExtra("id", ((Client) o).id);
-                    startActivity(i);
+                if (tab == TAB_CLIENTS && o instanceof Client) {
+                    startActivity(new Intent(MainActivity.this, ClientDetailActivity.class)
+                            .putExtra("id", ((Client) o).id));
+                    overridePendingTransition(R.anim.slide_in, R.anim.fade_out);
                 }
             }
         });
 
-        findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
-                if (tab == TAB_BOOK) {
-                    startActivity(new Intent(MainActivity.this, EditApptActivity.class));
-                } else {
-                    startActivity(new Intent(MainActivity.this, EditClientActivity.class));
+        View fab = findViewById(R.id.fab);
+        fab.setOnTouchListener(new View.OnTouchListener() {
+            @Override public boolean onTouch(View v, android.view.MotionEvent ev) {
+                switch (ev.getActionMasked()) {
+                    case android.view.MotionEvent.ACTION_DOWN:
+                        v.animate().scaleX(0.88f).scaleY(0.88f).setDuration(70).start();
+                        break;
+                    case android.view.MotionEvent.ACTION_UP:
+                    case android.view.MotionEvent.ACTION_CANCEL:
+                        v.animate().scaleX(1f).scaleY(1f).setDuration(150)
+                                .setInterpolator(new android.view.animation
+                                        .OvershootInterpolator(2f)).start();
+                        break;
                 }
+                return false;
+            }
+        });
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, tab == TAB_BOOK
+                        ? EditApptActivity.class : EditClientActivity.class));
+                overridePendingTransition(R.anim.slide_in, R.anim.fade_out);
             }
         });
 
@@ -110,12 +126,63 @@ public class MainActivity extends Activity {
         requestNotifPermIfNeeded();
     }
 
+    private final Adapters.RowMenuHost host = new Adapters.RowMenuHost() {
+        @Override public void onMenuItem(final Appt a, int action) {
+            Db db = Db.get(MainActivity.this);
+            switch (action) {
+                case 1: ImageViewTint.dial(MainActivity.this, a.clientPhone); break;
+                case 2:
+                    startActivity(new Intent(MainActivity.this, EditApptActivity.class)
+                            .putExtra("id", a.id));
+                    break;
+                case 3:
+                    db.setStatus(a.id, Appt.DONE);
+                    Alarms.cancelAppt(MainActivity.this, a.id);
+                    reload();
+                    break;
+                case 4:
+                    db.setStatus(a.id, Appt.CANC);
+                    Alarms.cancelAppt(MainActivity.this, a.id);
+                    reload();
+                    break;
+                case 5:
+                    db.setStatus(a.id, Appt.UP);
+                    Alarms.scheduleFor(MainActivity.this, db.appt(a.id));
+                    reload();
+                    break;
+                case 6:
+                    db.settleClient(a.clientId);
+                    Toast.makeText(MainActivity.this, R.string.settled,
+                            Toast.LENGTH_SHORT).show();
+                    reload();
+                    break;
+                case 7:
+                    new android.app.AlertDialog.Builder(MainActivity.this)
+                            .setMessage(R.string.confirm_delete_appt)
+                            .setPositiveButton(R.string.delete,
+                                    new android.content.DialogInterface.OnClickListener() {
+                                        public void onClick(android.content.DialogInterface d,
+                                                            int w) {
+                                            Db.get(MainActivity.this).deleteAppt(a.id);
+                                            Alarms.cancelAppt(MainActivity.this, a.id);
+                                            Toast.makeText(MainActivity.this,
+                                                    R.string.deleted, Toast.LENGTH_SHORT).show();
+                                            reload();
+                                        }
+                                    })
+                            .setNegativeButton(R.string.cancel, null).show();
+                    break;
+            }
+        }
+    };
+
     private void bindNav() {
         int[][] map = {{R.id.nav_bookings}, {R.id.nav_clients}, {R.id.nav_settings}};
         View.OnClickListener l = new View.OnClickListener() {
             @Override public void onClick(View v) {
                 if (v.getId() == R.id.nav_settings) {
                     startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+                    overridePendingTransition(R.anim.slide_in, R.anim.fade_out);
                     return;
                 }
                 setTab(v.getId() == R.id.nav_bookings ? TAB_BOOK : TAB_CLIENTS);
@@ -181,6 +248,7 @@ public class MainActivity extends Activity {
             appts = db.appts(query.isEmpty() ? null : query, null);
             apptAdapter.rebuild(appts);
             list.setAdapter(apptAdapter);
+            list.startLayoutAnimation();
             boolean isEmpty = appts.isEmpty();
             empty.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
             list.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
@@ -207,6 +275,7 @@ public class MainActivity extends Activity {
             }
             clientAdapter.rebuild(clients, nextMap, db.owedByClient());
             list.setAdapter(clientAdapter);
+            list.startLayoutAnimation();
             boolean isEmpty = clients.isEmpty();
             empty.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
             list.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
@@ -236,110 +305,4 @@ public class MainActivity extends Activity {
         }
     }
 
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo mi) {
-        super.onCreateContextMenu(menu, v, mi);
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) mi;
-        Object o = list.getItemAtPosition(info.position);
-        if (o instanceof Appt) {
-            Appt a = (Appt) o;
-            if (a.clientPhone != null && !a.clientPhone.trim().isEmpty())
-                menu.add(0, 1, 0, getString(R.string.call) + " " + a.clientName);
-            menu.add(0, 2, 0, R.string.edit);
-            if (Appt.UP.equals(a.status)) {
-                menu.add(0, 3, 0, R.string.mark_done);
-                menu.add(0, 4, 0, R.string.mark_cancelled);
-            } else {
-                menu.add(0, 5, 0, R.string.reopen);
-            }
-            menu.add(0, 6, 0, R.string.delete);
-        } else if (o instanceof Client) {
-            Client x = (Client) o;
-            if (!x.phone.trim().isEmpty()) menu.add(0, 7, 0, getString(R.string.call) + " " + x.name);
-            menu.add(0, 8, 0, R.string.edit);
-            menu.add(0, 9, 0, R.string.delete);
-        }
-    }
-
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        AdapterView.AdapterContextMenuInfo info =
-                (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        Object o = list.getItemAtPosition(info.position);
-        Db db = Db.get(this);
-        switch (item.getItemId()) {
-            case 1: { // call appt's client
-                Appt a = (Appt) o;
-                ImageViewTint.dial(this, a.clientPhone);
-                return true;
-            }
-            case 2: {
-                Appt a = (Appt) o;
-                startActivity(new Intent(this, EditApptActivity.class).putExtra("id", a.id));
-                return true;
-            }
-            case 3: {
-                db.setStatus(((Appt) o).id, Appt.DONE);
-                Alarms.cancelAppt(this, ((Appt) o).id);
-                reload();
-                return true;
-            }
-            case 4: {
-                db.setStatus(((Appt) o).id, Appt.CANC);
-                Alarms.cancelAppt(this, ((Appt) o).id);
-                reload();
-                return true;
-            }
-            case 5: {
-                db.setStatus(((Appt) o).id, Appt.UP);
-                Alarms.scheduleFor(this, db.appt(((Appt) o).id));
-                reload();
-                return true;
-            }
-            case 6: {
-                confirmDelete(getString(R.string.confirm_delete_appt), new Runnable() {
-                    public void run() {
-                        Appt a = (Appt) list.getItemAtPosition(
-                                ((AdapterView.AdapterContextMenuInfo) item.getMenuInfo()).position);
-                        Db.get(MainActivity.this).deleteAppt(a.id);
-                        Alarms.cancelAppt(MainActivity.this, a.id);
-                        Toast.makeText(MainActivity.this, R.string.deleted, Toast.LENGTH_SHORT).show();
-                        reload();
-                    }
-                });
-                return true;
-            }
-            case 7: {
-                ImageViewTint.dial(this, ((Client) o).phone);
-                return true;
-            }
-            case 8: {
-                startActivity(new Intent(this, EditClientActivity.class)
-                        .putExtra("id", ((Client) o).id));
-                return true;
-            }
-            case 9: {
-                final Client cx = (Client) o;
-                confirmDelete(getString(R.string.confirm_delete_client), new Runnable() {
-                    public void run() {
-                        Db.get(MainActivity.this).deleteClientCascade(cx.id);
-                        Toast.makeText(MainActivity.this, R.string.deleted, Toast.LENGTH_SHORT).show();
-                        reload();
-                    }
-                });
-                return true;
-            }
-        }
-        return super.onContextItemSelected(item);
-    }
-
-    private void confirmDelete(String msg, final Runnable yes) {
-        new android.app.AlertDialog.Builder(this)
-                .setMessage(msg)
-                .setPositiveButton(R.string.delete, new android.content.DialogInterface.OnClickListener() {
-                    public void onClick(android.content.DialogInterface d, int w) { yes.run(); }
-                })
-                .setNegativeButton(R.string.cancel, null)
-                .show();
-    }
 }

@@ -5,6 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -17,20 +19,20 @@ import java.util.Map;
 
 public class Adapters {
 
-    public interface QuickDone { void onQuickDone(Appt a); }
+    public interface RowMenu { void onRowMenu(Appt a, View anchor); }
 
     public static class ApptsAdapter extends BaseAdapter {
         private final Context ctx;
         private final LayoutInflater inf;
         private final List<Object> items = new ArrayList<>();
         private final boolean flat;
-        private final QuickDone quickDone;
+        private final RowMenu rowMenu;
 
-        public ApptsAdapter(Context ctx, List<Appt> src, boolean flat, QuickDone qd) {
+        public ApptsAdapter(Context ctx, List<Appt> src, boolean flat, RowMenu rm) {
             this.ctx = ctx;
             this.inf = LayoutInflater.from(ctx);
             this.flat = flat;
-            this.quickDone = qd;
+            this.rowMenu = rm;
             rebuild(src);
         }
 
@@ -125,30 +127,22 @@ public class Adapters {
                 h = new H(cv);
                 cv.setTag(h);
             }
-            boolean past = a.start < System.currentTimeMillis();
 
+            h.card.setAlpha(a.historyView ? 0.45f : 1f);
+            h.dots.setAlpha(a.historyView ? 0.45f : 1f);
             h.time.setText(a.historyView
-                    ? Fmt.dayLabel(a.start) : Fmt.timeShort(a.start));
-            h.ampm.setText(a.historyView
-                    ? Fmt.monthDay(a.start) : Fmt.ampm(a.start).toUpperCase(Locale.getDefault()));
+                    ? Fmt.monthDay(a.start) + "  ·  " + Fmt.timeShort(a.start)
+                    : Fmt.timeShort(a.start) + " " + Fmt.ampm(a.start));
             h.name.setText(a.clientName);
 
-            String meta = a.historyView
-                    ? Fmt.monthDay(a.start) + "  ·  " + a.service : a.service;
+            String meta = a.service;
             String money = Fmt.money(a.amount);
             if (!money.isEmpty()) meta += "  ·  " + money;
             String bal = Fmt.money(a.balance());
             if (!bal.isEmpty() && !"0".equals(bal)) meta += "  ·  " + bal + " owed";
             h.meta.setText(meta);
 
-            boolean showCheck = Appt.UP.equals(a.status);
-            h.doneBtn.setVisibility(showCheck ? View.VISIBLE : View.GONE);
-            h.doneBtn.setOnClickListener(showCheck ? new View.OnClickListener() {
-                @Override public void onClick(View v) {
-                    if (quickDone != null) quickDone.onQuickDone(a);
-                }
-            } : null);
-
+            boolean past = a.start < System.currentTimeMillis();
             if (Appt.DONE.equals(a.status)) {
                 h.pill.setVisibility(View.VISIBLE);
                 h.pill.setBackgroundResource(R.drawable.bg_chip_done);
@@ -167,6 +161,21 @@ public class Adapters {
             } else {
                 h.pill.setVisibility(View.GONE);
             }
+
+            h.card.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View v) {
+                    ctx.startActivity(new android.content.Intent(ctx, EditApptActivity.class)
+                            .putExtra("id", a.id)
+                            .addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK));
+                }
+            });
+            if (rowMenu != null) {
+                h.dots.setOnClickListener(new View.OnClickListener() {
+                    @Override public void onClick(View v) { rowMenu.onRowMenu(a, v); }
+                });
+            } else {
+                h.dots.setOnClickListener(null);
+            }
             return cv;
         }
 
@@ -178,18 +187,45 @@ public class Adapters {
         }
 
         static class H {
-            final TextView time, ampm, name, meta, pill;
-            final View doneBtn;
+            final TextView time, name, meta, pill;
+            final View card, dots;
             H(View v) {
                 time = v.findViewById(R.id.time);
-                ampm = v.findViewById(R.id.ampm);
                 name = v.findViewById(R.id.client_name);
                 meta = v.findViewById(R.id.meta);
                 pill = v.findViewById(R.id.status_pill);
-                doneBtn = v.findViewById(R.id.done_btn);
+                card = v.findViewById(R.id.card);
+                dots = v.findViewById(R.id.more);
             }
         }
     }
+
+    public static PopupMenu apptMenu(Context ctx, View anchor, final Appt a,
+                                     final RowMenuHost host) {
+        PopupMenu pm = new PopupMenu(ctx, anchor);
+        if (a.clientPhone != null && !a.clientPhone.trim().isEmpty())
+            pm.getMenu().add(0, 1, 0, ctx.getString(R.string.call) + " " + a.clientName);
+        pm.getMenu().add(0, 2, 0, R.string.edit);
+        if (Appt.UP.equals(a.status)) {
+            pm.getMenu().add(0, 3, 0, R.string.mark_done);
+            pm.getMenu().add(0, 4, 0, R.string.mark_cancelled);
+        } else {
+            pm.getMenu().add(0, 5, 0, R.string.reopen);
+        }
+        if (a.balance() >= 1)
+            pm.getMenu().add(0, 6, 0, ctx.getString(R.string.settle, Fmt.money(a.balance())));
+        pm.getMenu().add(0, 7, 0, R.string.delete);
+        pm.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override public boolean onMenuItemClick(android.view.MenuItem item) {
+                host.onMenuItem(a, item.getItemId());
+                return true;
+            }
+        });
+        pm.show();
+        return pm;
+    }
+
+    public interface RowMenuHost { void onMenuItem(Appt a, int action); }
 
     public static class ClientsAdapter extends BaseAdapter {
         private final Context ctx;

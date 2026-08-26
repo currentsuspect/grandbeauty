@@ -25,26 +25,14 @@ public class ClientDetailActivity extends Activity {
 
         header = getLayoutInflater().inflate(R.layout.detail_header, null, false);
         ListView list = findViewById(R.id.list);
-        adapter = new Adapters.ApptsAdapter(this, null, true, new Adapters.QuickDone() {
-            @Override public void onQuickDone(Appt a) {
-                Db.get(ClientDetailActivity.this).setStatus(a.id, Appt.DONE);
-                Alarms.cancelAppt(ClientDetailActivity.this, a.id);
-                reload();
-            }
-        });
+        adapter = new Adapters.ApptsAdapter(this, null, true,
+                new Adapters.RowMenu() {
+                    @Override public void onRowMenu(Appt a, View anchor) {
+                        Adapters.apptMenu(ClientDetailActivity.this, anchor, a, host);
+                    }
+                });
         list.setAdapter(adapter);
         list.addHeaderView(header, null, false);
-        list.setOnItemClickListener(new android.widget.AdapterView.OnItemClickListener() {
-            @Override public void onItemClick(android.widget.AdapterView<?> p, View v,
-                                              int pos, long lid) {
-                Object o = p.getItemAtPosition(pos);
-                if (o instanceof Appt) {
-                    startActivity(new Intent(ClientDetailActivity.this, EditApptActivity.class)
-                            .putExtra("id", ((Appt) o).id));
-                }
-            }
-        });
-
         findViewById(R.id.back).setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) { finish(); }
         });
@@ -88,6 +76,43 @@ public class ClientDetailActivity extends Activity {
             @Override public void onClick(View v) { ImageViewTint.whatsapp(ClientDetailActivity.this, phone()); }
         });
     }
+
+    private final Adapters.RowMenuHost host = new Adapters.RowMenuHost() {
+        @Override public void onMenuItem(final Appt a, int action) {
+            Db db = Db.get(ClientDetailActivity.this);
+            switch (action) {
+                case 1: ImageViewTint.dial(ClientDetailActivity.this, a.clientPhone); break;
+                case 3:
+                    db.setStatus(a.id, Appt.DONE);
+                    Alarms.cancelAppt(ClientDetailActivity.this, a.id);
+                    reload();
+                    break;
+                case 4:
+                    db.setStatus(a.id, Appt.CANC);
+                    Alarms.cancelAppt(ClientDetailActivity.this, a.id);
+                    reload();
+                    break;
+                case 5:
+                    db.setStatus(a.id, Appt.UP);
+                    Alarms.scheduleFor(ClientDetailActivity.this, db.appt(a.id));
+                    reload();
+                    break;
+                case 6:
+                    db.settleClient(id);
+                    Toast.makeText(ClientDetailActivity.this, R.string.settled,
+                            Toast.LENGTH_SHORT).show();
+                    reload();
+                    break;
+                case 7:
+                    db.deleteAppt(a.id);
+                    Alarms.cancelAppt(ClientDetailActivity.this, a.id);
+                    Toast.makeText(ClientDetailActivity.this, R.string.deleted,
+                            Toast.LENGTH_SHORT).show();
+                    reload();
+                    break;
+            }
+        }
+    };
 
     private String phone() {
         Client x = db.client(id);

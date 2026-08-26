@@ -107,6 +107,18 @@
     <string name="notif_daily_first">First at %1$s — %2$s</string>
     <string name="notif_daily_expect">Expecting %1$s from %2$d booking(s)</string>
 
+    <string name="sec_you">You</string>
+    <string name="sec_reminders">Reminders</string>
+    <string name="sec_app">App</string>
+    <string name="sec_data">Your data</string>
+    <string name="set_update">Check for updates</string>
+    <string name="set_update_sub">You\'re on version %1$s</string>
+    <string name="update_checking">Checking…</string>
+    <string name="update_latest">You\'re on the latest version (%1$s)</string>
+    <string name="update_available">Update to %1$s — tap to install</string>
+    <string name="update_downloading">Downloading %1$s…</string>
+    <string name="update_failed">Couldn\'t reach updates — check internet</string>
+
     <string name="err_need_client">Pick or add a client first</string>
     <string name="err_need_service">What is the service?</string>
     <string name="saved">Saved</string>

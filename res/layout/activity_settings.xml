@@ -35,143 +35,63 @@
                 android:fontFamily="sans-serif-medium"/>
         </LinearLayout>
 
-        <TextView style="@style/FieldLabel" android:text="@string/set_yourname"
-            android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:layout_marginTop="22dp" android:layout_marginBottom="7dp"/>
-
-        <EditText android:id="@+id/owner_name"
-            style="@style/Input" android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/set_yourname_hint"
-            android:inputType="textPersonName|textCapWords"
-            android:singleLine="true"/>
-
-        <TextView style="@style/FieldLabel" android:text="@string/set_lead"
-            android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:layout_marginTop="24dp" android:layout_marginBottom="7dp"/>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView android:id="@+id/lead_15" style="@style/ChipToggle"
-                android:layout_width="0dp" android:layout_height="40dp"
-                android:layout_weight="1" android:text="15 min"/>
-            <Space android:layout_width="8dp" android:layout_height="1dp"/>
-            <TextView android:id="@+id/lead_30" style="@style/ChipToggle"
-                android:layout_width="0dp" android:layout_height="40dp"
-                android:layout_weight="1" android:text="30 min"/>
-            <Space android:layout_width="8dp" android:layout_height="1dp"/>
-            <TextView android:id="@+id/lead_60" style="@style/ChipToggle"
-                android:layout_width="0dp" android:layout_height="40dp"
-                android:layout_weight="1" android:text="1 hour"/>
-            <Space android:layout_width="8dp" android:layout_height="1dp"/>
-            <TextView android:id="@+id/lead_120" style="@style/ChipToggle"
-                android:layout_width="0dp" android:layout_height="40dp"
-                android:layout_weight="1" android:text="2 hours"/>
-            <Space android:layout_width="8dp" android:layout_height="1dp"/>
-            <TextView android:id="@+id/lead_1440" style="@style/ChipToggle"
-                android:layout_width="0dp" android:layout_height="40dp"
-                android:layout_weight="1" android:text="1 day"/>
+        <!-- YOU -->
+        <TextView style="@style/SectionHead" android:text="@string/sec_you"/>
+        <LinearLayout style="@style/Card">
+            <TextView style="@style/FieldLabel" android:text="@string/set_yourname"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:layout_marginBottom="7dp"/>
+            <EditText android:id="@+id/owner_name"
+                style="@style/Input" android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/onboard_name_hint"
+                android:inputType="textPersonName|textCapWords"
+                android:singleLine="true"/>
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@drawable/bg_card"
-            android:padding="16dp"
-            android:layout_marginTop="20dp">
-
-            <Switch android:id="@+id/daily_switch"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/set_daily"
-                android:textSize="15sp"
-                android:textColor="@color/text"
-                android:fontFamily="sans-serif-medium"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="@string/set_daily_sub"
-                android:textSize="13sp"
-                android:textColor="@color/text_sub"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@drawable/bg_card"
-            android:padding="16dp"
-            android:layout_marginTop="12dp">
-
-            <Switch android:id="@+id/regulars_switch"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/set_regulars"
-                android:textSize="15sp"
-                android:textColor="@color/text"
-                android:fontFamily="sans-serif-medium"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="@string/set_regulars_sub"
-                android:textSize="13sp"
-                android:textColor="@color/text_sub"/>
-        </LinearLayout>
-
-        <LinearLayout android:id="@+id/exact_row"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:background="@drawable/bg_card"
-            android:padding="16dp"
-            android:layout_marginTop="12dp">
-
-            <ImageView
-                android:layout_width="22dp" android:layout_height="22dp"
-                android:src="@drawable/ic_clock_w"/>
-
-            <TextView android:id="@+id/exact_text"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginLeft="13dp"
-                android:textSize="14sp"
-                android:textColor="@color/text"/>
-        </LinearLayout>
-
-        <LinearLayout android:id="@+id/export_row"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:background="@drawable/bg_card"
-            android:padding="16dp"
-            android:layout_marginTop="12dp">
-
-            <ImageView
-                android:layout_width="22dp" android:layout_height="22dp"
-                android:src="@drawable/ic_download_p"/>
+        <!-- REMINDERS -->
+        <TextView style="@style/SectionHead" android:text="@string/sec_reminders"/>
+        <LinearLayout style="@style/Card">
+            <TextView style="@style/FieldLabel" android:text="@string/set_lead"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:layout_marginBottom="9dp"/>
 
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:layout_marginLeft="13dp">
+                android:orientation="horizontal">
 
-                <TextView
+                <TextView android:id="@+id/lead_15" style="@style/ChipToggle"
+                    android:layout_width="0dp" android:layout_height="38dp"
+                    android:layout_weight="1" android:text="15 min"/>
+                <Space android:layout_width="6dp" android:layout_height="1dp"/>
+                <TextView android:id="@+id/lead_30" style="@style/ChipToggle"
+                    android:layout_width="0dp" android:layout_height="38dp"
+                    android:layout_weight="1" android:text="30 min"/>
+                <Space android:layout_width="6dp" android:layout_height="1dp"/>
+                <TextView android:id="@+id/lead_60" style="@style/ChipToggle"
+                    android:layout_width="0dp" android:layout_height="38dp"
+                    android:layout_weight="1" android:text="1 hour"/>
+                <Space android:layout_width="6dp" android:layout_height="1dp"/>
+                <TextView android:id="@+id/lead_120" style="@style/ChipToggle"
+                    android:layout_width="0dp" android:layout_height="38dp"
+                    android:layout_weight="1" android:text="2 hours"/>
+                <Space android:layout_width="6dp" android:layout_height="1dp"/>
+                <TextView android:id="@+id/lead_1440" style="@style/ChipToggle"
+                    android:layout_width="0dp" android:layout_height="38dp"
+                    android:layout_weight="1" android:text="1 day"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="14dp">
+
+                <Switch android:id="@+id/daily_switch"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/set_export"
+                    android:text="@string/set_daily"
                     android:textSize="15sp"
                     android:textColor="@color/text"
                     android:fontFamily="sans-serif-medium"/>
@@ -180,54 +100,180 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
-                    android:text="@string/set_export_sub"
+                    android:text="@string/set_daily_sub"
+                    android:textSize="13sp"
+                    android:textColor="@color/text_sub"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="14dp">
+
+                <Switch android:id="@+id/regulars_switch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/set_regulars"
+                    android:textSize="15sp"
+                    android:textColor="@color/text"
+                    android:fontFamily="sans-serif-medium"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:text="@string/set_regulars_sub"
+                    android:textSize="13sp"
+                    android:textColor="@color/text_sub"/>
+            </LinearLayout>
+
+            <LinearLayout android:id="@+id/exact_row"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="14dp">
+
+                <ImageView
+                    android:layout_width="20dp" android:layout_height="20dp"
+                    android:src="@drawable/ic_clock_w"/>
+
+                <TextView android:id="@+id/exact_text"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="12dp"
                     android:textSize="13sp"
                     android:textColor="@color/text_sub"/>
             </LinearLayout>
         </LinearLayout>
 
-        <LinearLayout android:id="@+id/share_row"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:background="@drawable/bg_card"
-            android:padding="16dp"
-            android:layout_marginTop="12dp">
-
-            <ImageView
-                android:layout_width="22dp" android:layout_height="22dp"
-                android:src="@drawable/ic_share_p"/>
-
-            <LinearLayout
-                android:layout_width="0dp"
+        <!-- APP -->
+        <TextView style="@style/SectionHead" android:text="@string/sec_app"/>
+        <LinearLayout style="@style/Card">
+            <LinearLayout android:id="@+id/update_row"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:layout_marginLeft="13dp">
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/set_share"
-                    android:textSize="15sp"
-                    android:textColor="@color/text"
-                    android:fontFamily="sans-serif-medium"/>
+                <ImageView
+                    android:layout_width="22dp" android:layout_height="22dp"
+                    android:src="@drawable/ic_download_p"/>
 
-                <TextView
-                    android:layout_width="match_parent"
+                <LinearLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="3dp"
-                    android:text="@string/set_share_sub"
-                    android:textSize="13sp"
-                    android:textColor="@color/text_sub"/>
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:layout_marginLeft="13dp">
+
+                    <TextView android:id="@+id/update_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/set_update"
+                        android:textSize="15sp"
+                        android:textColor="@color/text"
+                        android:fontFamily="sans-serif-medium"/>
+
+                    <TextView android:id="@+id/update_sub"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:textSize="13sp"
+                        android:textColor="@color/text_sub"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <ProgressBar android:id="@+id/update_progress"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:max="100"
+                android:visibility="gone"/>
+        </LinearLayout>
+
+        <!-- DATA -->
+        <TextView style="@style/SectionHead" android:text="@string/sec_data"/>
+        <LinearLayout style="@style/Card">
+            <LinearLayout android:id="@+id/export_row"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="22dp" android:layout_height="22dp"
+                    android:src="@drawable/ic_download_p"/>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:layout_marginLeft="13dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/set_export"
+                        android:textSize="15sp"
+                        android:textColor="@color/text"
+                        android:fontFamily="sans-serif-medium"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:text="@string/set_export_sub"
+                        android:textSize="13sp"
+                        android:textColor="@color/text_sub"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout android:id="@+id/share_row"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="16dp">
+
+                <ImageView
+                    android:layout_width="22dp" android:layout_height="22dp"
+                    android:src="@drawable/ic_share_p"/>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:layout_marginLeft="13dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/set_share"
+                        android:textSize="15sp"
+                        android:textColor="@color/text"
+                        android:fontFamily="sans-serif-medium"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:text="@string/set_share_sub"
+                        android:textSize="13sp"
+                        android:textColor="@color/text_sub"/>
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="28dp"
+            android:layout_marginTop="26dp"
             android:gravity="center"
             android:lineSpacingExtra="4dp"
             android:textSize="13sp"
