@@ -41,6 +41,7 @@ public class EditApptActivity extends Activity {
 
         id = getIntent().getLongExtra("id", -1);
         long preClient = getIntent().getLongExtra("client_id", -1);
+        long preDate = getIntent().getLongExtra("date", -1);
 
         spinner = findViewById(R.id.client_spinner);
         dateBtn = findViewById(R.id.date_btn);
@@ -85,6 +86,11 @@ public class EditApptActivity extends Activity {
             ((TextView) findViewById(R.id.title)).setText(getString(R.string.edit));
             delBtn.setVisibility(View.VISIBLE);
             statusRow.setVisibility(View.VISIBLE);
+        } else if (preDate > 0) {
+            cal.setTimeInMillis(preDate);
+            Fmt.clearTime(cal);
+            cal.set(Calendar.HOUR_OF_DAY, 10);
+            ((TextView) findViewById(R.id.title)).setText(getString(R.string.new_appt));
         } else {
             // default: tomorrow at the next half-hour slot after now
             cal.setTimeInMillis(System.currentTimeMillis());
@@ -96,6 +102,31 @@ public class EditApptActivity extends Activity {
         }
         if (preClient > 0) clientId = preClient;
         remindSwitch.setChecked(remind);
+        Ui.tintSwitch(remindSwitch);
+
+        final android.os.Handler priceH = new android.os.Handler(
+                android.os.Looper.getMainLooper());
+        final Runnable priceRun = new Runnable() {
+            @Override public void run() {
+                if (amount.getText().toString().trim().isEmpty()) {
+                    Double p = Fmt.priceFor(EditApptActivity.this,
+                            service.getText().toString());
+                    if (p != null) {
+                        long lv = (long) (double) p;
+                        amount.setText(p == lv ? String.valueOf(lv)
+                                : String.valueOf(p));
+                    }
+                }
+            }
+        };
+        service.addTextChangedListener(new android.text.TextWatcher() {
+            public void beforeTextChanged(CharSequence s, int a, int b, int c2) {}
+            public void onTextChanged(CharSequence s, int a, int b, int c2) {}
+            public void afterTextChanged(android.text.Editable s) {
+                priceH.removeCallbacks(priceRun);
+                priceH.postDelayed(priceRun, 220);
+            }
+        });
 
         dateBtn.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
@@ -237,6 +268,7 @@ public class EditApptActivity extends Activity {
         a.note = notes.getText().toString().trim();
         a.remind = remindSwitch.isChecked();
         a.status = status;
+        if (a.amount != null) Fmt.rememberPrice(this, a.service, a.amount);
 
         if (id <= 0) {
             for (Appt other : db.appts(null, clientId)) {

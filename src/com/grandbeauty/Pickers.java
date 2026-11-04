@@ -1,7 +1,7 @@
 package com.grandbeauty;
 
 import android.app.Activity;
-import android.app.AlertDialog;
+import android.app.Dialog;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,20 +38,46 @@ public final class Pickers {
 
     public static void datePicker(final Activity act, Calendar initial, final DateCb cb) {
         final CalendarPickerView view = new CalendarPickerView(act, initial);
-        new AlertDialog.Builder(act)
-                .setView(wrap(act, view))
-                .setPositiveButton(R.string.save, (dialog, w) -> cb.onPick(view.selected()))
-                .setNegativeButton(R.string.cancel, null)
-                .show();
+        LinearLayout box = new LinearLayout(act);
+        box.setOrientation(LinearLayout.VERTICAL);
+        box.addView(view, new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        box.addView(buttons(act, () -> cb.onPick(view.selected())));
+        current = Menus.show(act, box);
     }
 
-    private static View wrap(Activity act, View inner) {
-        FrameLayout f = new FrameLayout(act);
-        int pad = dp(act, 20);
-        f.setPadding(pad, dp(act, 12), pad, dp(act, 4));
-        f.addView(inner, new FrameLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        return f;
+    private static LinearLayout buttons(final Activity act, final Runnable onSave) {
+        LinearLayout row = new LinearLayout(act);
+        row.setOrientation(LinearLayout.HORIZONTAL);
+        row.setGravity(Gravity.CENTER_VERTICAL);
+        row.setPadding(0, dp(act, 10), 0, 0);
+
+        TextView cancel = text(act, act.getString(R.string.cancel).toUpperCase(Locale.getDefault()),
+                14, act.getColor(R.color.text_sub), true);
+        cancel.setPadding(dp(act, 10), dp(act, 12), dp(act, 10), dp(act, 12));
+        cancel.setOnClickListener(v -> dismissCurrent());
+        row.addView(cancel);
+
+        TextView save = text(act, act.getString(R.string.save).toUpperCase(Locale.getDefault()),
+                14, act.getColor(R.color.on_primary_container), true);
+        save.setBackgroundResource(R.drawable.bg_cta);
+        LinearLayout.LayoutParams sp = new LinearLayout.LayoutParams(
+                0, dp(act, 46), 1f);
+        sp.leftMargin = dp(act, 10);
+        save.setLayoutParams(sp);
+        save.setOnClickListener(v -> {
+            dismissCurrent();
+            onSave.run();
+        });
+        row.addView(save);
+        return row;
+    }
+
+    private static Dialog current;
+
+    private static void dismissCurrent() {
+        if (current != null) current.dismiss();
+        current = null;
     }
 
     static class CalendarPickerView extends LinearLayout {
@@ -166,6 +192,7 @@ public final class Pickers {
     // ---------- time ----------
 
     private static class Wheel extends ListView {
+        private static final int SPACER_ROWS = 2;
         final Activity act;
         final int[] values;
         final int rowH;
@@ -181,17 +208,21 @@ public final class Pickers {
             setSelector(new android.graphics.drawable.ColorDrawable(0));
             setCacheColorHint(0);
             setAdapter(new BaseAdapter() {
-                @Override public int getCount() { return values.length; }
-                @Override public Object getItem(int p) { return values[p]; }
+                @Override public int getCount() { return values.length + SPACER_ROWS * 2; }
+                @Override public Object getItem(int p) {
+                    int valueIdx = p - SPACER_ROWS;
+                    return valueIdx < 0 || valueIdx >= values.length ? null : values[valueIdx];
+                }
                 @Override public long getItemId(int p) { return p; }
                 @Override
                 public View getView(int p, View cv, ViewGroup parent) {
                     TextView t = cv == null
                             ? text(act, "", 22, act.getColor(R.color.text), true)
                             : (TextView) cv;
-                    String label = p == selectedIdx ? label(values[p]) : label(values[p]);
-                    t.setText(label);
-                    t.setAlpha(p == selectedIdx ? 1f : 0.35f);
+                    int valueIdx = p - SPACER_ROWS;
+                    boolean spacer = valueIdx < 0 || valueIdx >= values.length;
+                    t.setText(spacer ? "" : label(values[valueIdx]));
+                    t.setAlpha(spacer ? 0f : valueIdx == selectedIdx ? 1f : 0.35f);
                     t.setLayoutParams(new AbsListView.LayoutParams(
                             ViewGroup.LayoutParams.MATCH_PARENT, rowH));
                     return t;
@@ -204,7 +235,8 @@ public final class Pickers {
                 @Override public void onScroll(AbsListView v, int a, int b, int c) {}
             });
             final int init = initialIdx;
-            post(() -> setSelectionFromTop(init, getHeight() / 2 - rowH / 2));
+            post(() -> setSelectionFromTop(init + SPACER_ROWS,
+                    getHeight() / 2 - rowH / 2));
         }
 
         private String label(int v) {
@@ -217,7 +249,7 @@ public final class Pickers {
             if (getFirstVisiblePosition() < 0 || getChildAt(0) == null) return;
             int center = getHeight() / 2;
             int idx = centerIndex();
-            setSelectionFromTop(idx, center - rowH / 2);
+            setSelectionFromTop(idx + SPACER_ROWS, center - rowH / 2);
             if (idx != selectedIdx) {
                 selectedIdx = idx;
                 invalidateViews();
@@ -229,7 +261,7 @@ public final class Pickers {
                 return Math.max(0, Math.min(selectedIdx, values.length - 1));
             int center = getHeight() / 2;
             int first = getFirstVisiblePosition();
-            int idx = first + (center - getChildAt(0).getTop()) / rowH;
+            int idx = first + (center - getChildAt(0).getTop()) / rowH - SPACER_ROWS;
             return Math.max(0, Math.min(idx, values.length - 1));
         }
     }
@@ -242,11 +274,11 @@ public final class Pickers {
 
         int[] hours = new int[12];
         for (int i = 0; i < 12; i++) hours[i] = i + 1;
-        int[] minutes = new int[12];
-        for (int i = 0; i < 12; i++) minutes[i] = i * 5;
+        int[] minutes = new int[60];
+        for (int i = 0; i < 60; i++) minutes[i] = i;
 
         final Wheel hourW = new Wheel(act, hours, h12 - 1);
-        final Wheel minW = new Wheel(act, minutes, initial.get(Calendar.MINUTE) / 5);
+        final Wheel minW = new Wheel(act, minutes, initial.get(Calendar.MINUTE));
 
         FrameLayout wheelBox = new FrameLayout(act);
         int wheelH = dp(act, 5 * 44);
@@ -290,19 +322,20 @@ public final class Pickers {
                 0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
         row.addView(ampm);
 
-        new AlertDialog.Builder(act)
-                .setView(wrap(act, row))
-                .setPositiveButton(R.string.save, (dialog, w) -> {
-                    Calendar out = (Calendar) initial.clone();
-                    int h = hourW.values[hourW.centerIndex()] % 12;
-                    if (pm[0]) h += 12;
-                    out.set(Calendar.HOUR_OF_DAY, h);
-                    out.set(Calendar.MINUTE, minW.values[minW.centerIndex()]);
-                    out.set(Calendar.SECOND, 0);
-                    cb.onPick(out);
-                })
-                .setNegativeButton(R.string.cancel, null)
-                .show();
+        LinearLayout box = new LinearLayout(act);
+        box.setOrientation(LinearLayout.VERTICAL);
+        box.addView(row, new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        box.addView(buttons(act, () -> {
+            Calendar out = (Calendar) initial.clone();
+            int h = hourW.values[hourW.centerIndex()] % 12;
+            if (pm[0]) h += 12;
+            out.set(Calendar.HOUR_OF_DAY, h);
+            out.set(Calendar.MINUTE, minW.values[minW.centerIndex()]);
+            out.set(Calendar.SECOND, 0);
+            cb.onPick(out);
+        }));
+        current = Menus.show(act, box);
     }
 
     private static void paintAmpm(TextView am, TextView pmT, boolean isPm, Activity a) {

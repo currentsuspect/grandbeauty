@@ -1,12 +1,12 @@
 package com.grandbeauty;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -20,6 +20,15 @@ import java.util.Map;
 public class Adapters {
 
     public interface RowMenu { void onRowMenu(Appt a, View anchor); }
+
+    public static class Section {
+        public final String label, meta;
+        public final boolean warn;
+        public final long dateMs;
+        public Section(String label, String meta, boolean warn, long dateMs) {
+            this.label = label; this.meta = meta; this.warn = warn; this.dateMs = dateMs;
+        }
+    }
 
     public static class ApptsAdapter extends BaseAdapter {
         private final Context ctx;
@@ -59,6 +68,7 @@ public class Adapters {
             List<Appt> history = new ArrayList<>();
 
             for (Appt a : src) {
+                a.nextUp = false;
                 if (a.start >= todayStart) {
                     a.historyView = false;
                     future.add(a);
@@ -71,31 +81,58 @@ public class Adapters {
                 }
             }
 
+            Collections.sort(attention, new Comparator<Appt>() {
+                public int compare(Appt a, Appt b) { return Long.compare(b.start, a.start); }
+            });
+            Collections.sort(history, new Comparator<Appt>() {
+                public int compare(Appt a, Appt b) { return Long.compare(b.start, a.start); }
+            });
+
+            for (Appt a : future) {
+                if (Appt.UP.equals(a.status)) { a.nextUp = true; break; }
+            }
+
             if (!attention.isEmpty()) {
-                items.add(ctx.getString(R.string.section_attention)
-                        .toUpperCase(Locale.getDefault()));
-                Collections.sort(attention, new Comparator<Appt>() {
-                    public int compare(Appt a, Appt b) { return Long.compare(b.start, a.start); }
-                });
+                items.add(new Section(ctx.getString(R.string.section_attention)
+                        .toUpperCase(Locale.getDefault()),
+                        ctx.getResources().getQuantityString(
+                                R.plurals.attention_count, attention.size(), attention.size()),
+                        true, 0));
                 items.addAll(attention);
             }
 
-            String lastLabel = null;
+            java.util.LinkedHashMap<String, int[]> dayAgg = new java.util.LinkedHashMap<>();
             for (Appt a : future) {
-                String label = Fmt.dayLabel(a.start).toUpperCase(Locale.getDefault());
-                if (!label.equals(lastLabel)) {
-                    items.add(label);
-                    lastLabel = label;
+                if (Appt.CANC.equals(a.status)) continue;
+                String day = Fmt.dayLabel(a.start).toUpperCase(Locale.getDefault());
+                int[] agg = dayAgg.get(day);
+                if (agg == null) { agg = new int[2]; dayAgg.put(day, agg); }
+                agg[0]++;
+                if (a.amount != null && a.start >= todayStart)
+                    agg[1] += (int) Math.round(a.amount);
+            }
+
+            String lastDay = null;
+            for (Appt a : future) {
+                String day = Fmt.dayLabel(a.start).toUpperCase(Locale.getDefault());
+                if (!day.equals(lastDay)) {
+                    int[] agg = dayAgg.get(day);
+                    StringBuilder m = new StringBuilder(
+                            ctx.getResources().getQuantityString(R.plurals.bookings_count,
+                                    agg[0], agg[0]));
+                    if (agg[1] > 0) m.append(" · ").append(Fmt.money((double) agg[1]));
+                    items.add(new Section(day, m.toString(), false, a.start));
+                    lastDay = day;
                 }
                 items.add(a);
             }
 
             if (!history.isEmpty()) {
-                items.add(ctx.getString(R.string.section_history)
-                        .toUpperCase(Locale.getDefault()));
-                Collections.sort(history, new Comparator<Appt>() {
-                    public int compare(Appt a, Appt b) { return Long.compare(b.start, a.start); }
-                });
+                items.add(new Section(ctx.getString(R.string.section_history)
+                        .toUpperCase(Locale.getDefault()),
+                        ctx.getResources().getQuantityString(
+                                R.plurals.visits_count, history.size(), history.size()),
+                        false, 0));
                 items.addAll(history);
             }
         }
@@ -109,14 +146,40 @@ public class Adapters {
         @Override
         public View getView(int pos, View cv, ViewGroup parent) {
             Object o = items.get(pos);
-            if (o instanceof String) {
-                HeaderH h = cv == null ? null : (HeaderH) cv.getTag();
+            if (o instanceof Section) {
+                Section s = (Section) o;
+                HeaderH h = cv == null || !(cv.getTag() instanceof HeaderH)
+                        ? null : (HeaderH) cv.getTag();
                 if (h == null) {
                     cv = inf.inflate(R.layout.row_header, parent, false);
                     h = new HeaderH(cv);
                     cv.setTag(h);
                 }
-                h.label.setText((String) o);
+                h.label.setText(s.label);
+                int color = res(s.warn ? R.color.danger : R.color.primary);
+                h.label.setTextColor(color);
+                if (s.meta != null) {
+                    h.meta.setVisibility(View.VISIBLE);
+                    h.meta.setText(s.meta);
+                    h.meta.setTextColor(res(s.warn ? R.color.danger : R.color.text_sub));
+                } else {
+                    h.meta.setVisibility(View.GONE);
+                }
+                if (s.dateMs > 0) {
+                    final long date = s.dateMs;
+                    cv.setOnClickListener(new View.OnClickListener() {
+                        @Override public void onClick(View v) {
+                            ctx.startActivity(new android.content.Intent(ctx,
+                                    EditApptActivity.class)
+                                    .putExtra("date", date)
+                                    .addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK));
+                        }
+                    });
+                    Ui.press(cv);
+                } else {
+                    cv.setOnClickListener(null);
+                    cv.setOnTouchListener(null);
+                }
                 return cv;
             }
 
@@ -130,6 +193,10 @@ public class Adapters {
 
             h.card.setAlpha(a.historyView ? 0.45f : 1f);
             h.dots.setAlpha(a.historyView ? 0.45f : 1f);
+            h.railLine.setAlpha(a.historyView ? 0.45f : 1f);
+            boolean trailEnd = pos == items.size() - 1 || !(items.get(pos + 1) instanceof Appt);
+            h.railLine.setVisibility(trailEnd ? View.INVISIBLE : View.VISIBLE);
+            h.nextPill.setVisibility(!a.historyView && a.nextUp ? View.VISIBLE : View.GONE);
             h.time.setText(a.historyView
                     ? Fmt.monthDay(a.start) + "  ·  " + Fmt.timeShort(a.start)
                     : Fmt.timeShort(a.start) + " " + Fmt.ampm(a.start));
@@ -162,11 +229,10 @@ public class Adapters {
                 h.pill.setVisibility(View.GONE);
             }
 
+            final View cardV = h.card;
             h.card.setOnClickListener(new View.OnClickListener() {
                 @Override public void onClick(View v) {
-                    ctx.startActivity(new android.content.Intent(ctx, EditApptActivity.class)
-                            .putExtra("id", a.id)
-                            .addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK));
+                    if (rowMenu != null) rowMenu.onRowMenu(a, cardV);
                 }
             });
             if (rowMenu != null) {
@@ -176,53 +242,68 @@ public class Adapters {
             } else {
                 h.dots.setOnClickListener(null);
             }
+            Ui.press(h.card);
+            Ui.press(h.dots);
             return cv;
         }
 
         private int res(int id) { return ctx.getResources().getColor(id); }
 
+        private int dp(float v) {
+            return Math.round(v * ctx.getResources().getDisplayMetrics().density);
+        }
+
         static class HeaderH {
-            final TextView label;
-            HeaderH(View v) { label = v.findViewById(R.id.text1); }
+            final TextView label, meta;
+            HeaderH(View v) {
+                label = v.findViewById(R.id.text1);
+                meta = v.findViewById(R.id.text2);
+            }
         }
 
         static class H {
-            final TextView time, name, meta, pill;
-            final View card, dots;
+            final TextView time, name, meta, pill, nextPill;
+            final View card, dots, railLine;
             H(View v) {
                 time = v.findViewById(R.id.time);
                 name = v.findViewById(R.id.client_name);
                 meta = v.findViewById(R.id.meta);
                 pill = v.findViewById(R.id.status_pill);
+                nextPill = v.findViewById(R.id.next_pill);
                 card = v.findViewById(R.id.card);
                 dots = v.findViewById(R.id.more);
+                railLine = v.findViewById(R.id.rail_line);
             }
         }
     }
 
-    public static PopupMenu apptMenu(Context ctx, View anchor, final Appt a,
-                                     final RowMenuHost host) {
-        PopupMenu pm = new PopupMenu(ctx, anchor);
+    public static void apptMenu(final Context ctx, View anchor, final Appt a,
+                                final RowMenuHost host) {
+        Activity act = (Activity) ctx;
+        List<Menus.Item> items = new ArrayList<>();
         if (a.clientPhone != null && !a.clientPhone.trim().isEmpty())
-            pm.getMenu().add(0, 1, 0, ctx.getString(R.string.call) + " " + a.clientName);
-        pm.getMenu().add(0, 2, 0, R.string.edit);
+            items.add(new Menus.Item(R.drawable.ic_phone_s,
+                    ctx.getString(R.string.call) + " " + a.clientName,
+                    R.color.text, 1));
+        items.add(new Menus.Item(R.drawable.ic_edit_s,
+                ctx.getString(R.string.edit), R.color.text, 2));
         if (Appt.UP.equals(a.status)) {
-            pm.getMenu().add(0, 3, 0, R.string.mark_done);
-            pm.getMenu().add(0, 4, 0, R.string.mark_cancelled);
+            items.add(new Menus.Item(R.drawable.ic_check_d,
+                    ctx.getString(R.string.mark_done), R.color.text, 3));
+            items.add(new Menus.Item(R.drawable.ic_close_d,
+                    ctx.getString(R.string.mark_cancelled), R.color.danger, 4));
         } else {
-            pm.getMenu().add(0, 5, 0, R.string.reopen);
+            items.add(new Menus.Item(R.drawable.ic_clock_s,
+                    ctx.getString(R.string.reopen), R.color.text, 5));
         }
         if (a.balance() >= 1)
-            pm.getMenu().add(0, 6, 0, ctx.getString(R.string.settle, Fmt.money(a.balance())));
-        pm.getMenu().add(0, 7, 0, R.string.delete);
-        pm.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override public boolean onMenuItemClick(android.view.MenuItem item) {
-                host.onMenuItem(a, item.getItemId());
-                return true;
-            }
-        });
-        pm.show();
-        return pm;
+            items.add(new Menus.Item(R.drawable.ic_check_d,
+                    ctx.getString(R.string.settle, Fmt.money(a.balance())),
+                    R.color.secondary, 6));
+        items.add(new Menus.Item(R.drawable.ic_trash_d,
+                ctx.getString(R.string.delete), R.color.danger, 7));
+
+        Menus.actionSheet(act, items, action -> host.onMenuItem(a, action));
     }
 
     public interface RowMenuHost { void onMenuItem(Appt a, int action); }

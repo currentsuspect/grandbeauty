@@ -19,7 +19,7 @@ echo "[2/6] aapt2 link"
   -I "$PLAT" \
   --manifest "$ROOT/AndroidManifest.xml" \
   --java "$OUT/gen" \
-  --version-code 3 --version-name "3.0" \
+  --version-code 6 --version-name "5.0" \
   --min-sdk-version 24 --target-sdk-version 36 \
   --auto-add-overlay \
   "$OUT/res.zip"

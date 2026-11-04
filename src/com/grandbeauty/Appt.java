@@ -17,6 +17,7 @@ public class Appt {
     public String clientName = "";
     public String clientPhone = "";
     public boolean historyView;
+    public boolean nextUp;
 
     public double balance() {
         if (amount == null || CANC.equals(status)) return 0;

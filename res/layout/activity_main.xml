@@ -52,6 +52,97 @@
             android:drawablePadding="10dp"
             android:background="@drawable/bg_card"/>
 
+        <LinearLayout android:id="@+id/stats"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginLeft="20dp" android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp" android:layout_marginBottom="4dp"
+            android:background="@drawable/bg_band"
+            android:paddingTop="10dp" android:paddingBottom="10dp"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <TextView android:id="@+id/s_today_v"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:textSize="17sp"
+                    android:textColor="@color/text"
+                    android:fontFamily="sans-serif-medium"/>
+
+                <TextView android:id="@+id/s_today_l"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:layout_marginTop="1dp"
+                    android:text="@string/home_stat_today"
+                    android:textSize="10sp"
+                    android:textColor="@color/text_sub"
+                    android:fontFamily="sans-serif-medium"
+                    android:letterSpacing="0.1"
+                    android:textAllCaps="true"/>
+            </LinearLayout>
+
+            <View
+                android:layout_width="1dp" android:layout_height="30dp"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/bg_line"/>
+
+            <LinearLayout
+                android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <TextView android:id="@+id/s_take_v"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:textSize="17sp"
+                    android:textColor="@color/secondary"
+                    android:fontFamily="sans-serif-medium"/>
+
+                <TextView android:id="@+id/s_take_l"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:layout_marginTop="1dp"
+                    android:text="@string/home_stat_expected"
+                    android:textSize="10sp"
+                    android:textColor="@color/text_sub"
+                    android:fontFamily="sans-serif-medium"
+                    android:letterSpacing="0.1"
+                    android:textAllCaps="true"/>
+            </LinearLayout>
+
+            <View
+                android:layout_width="1dp" android:layout_height="30dp"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/bg_line"/>
+
+            <LinearLayout android:id="@+id/s_owed_cell"
+                android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:background="?android:attr/selectableItemBackgroundBorderless">
+
+                <TextView android:id="@+id/s_owed_v"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:textSize="17sp"
+                    android:textColor="@color/danger"
+                    android:fontFamily="sans-serif-medium"/>
+
+                <TextView android:id="@+id/s_owed_l"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:layout_marginTop="1dp"
+                    android:text="@string/home_stat_owed"
+                    android:textSize="10sp"
+                    android:textColor="@color/text_sub"
+                    android:fontFamily="sans-serif-medium"
+                    android:letterSpacing="0.1"
+                    android:textAllCaps="true"/>
+            </LinearLayout>
+        </LinearLayout>
+
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -183,4 +274,38 @@
             android:layout_gravity="center"
             android:src="@drawable/ic_plus"/>
     </FrameLayout>
+
+    <LinearLayout android:id="@+id/undo_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginLeft="16dp" android:layout_marginRight="16dp"
+        android:layout_marginBottom="80dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="@drawable/bg_sheet_float"
+        android:paddingLeft="18dp" android:paddingRight="6dp"
+        android:paddingTop="10dp" android:paddingBottom="10dp"
+        android:elevation="14dp"
+        android:visibility="gone">
+
+        <TextView android:id="@+id/undo_msg"
+            android:layout_width="0dp" android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="14sp"
+            android:textColor="@color/text"
+            android:fontFamily="sans-serif-medium"/>
+
+        <TextView android:id="@+id/undo_btn"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:paddingLeft="16dp" android:paddingRight="16dp"
+            android:paddingTop="10dp" android:paddingBottom="10dp"
+            android:text="@string/undo"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="@color/secondary"
+            android:fontFamily="sans-serif-medium"
+            android:letterSpacing="0.06"
+            android:background="?android:attr/selectableItemBackgroundBorderless"/>
+    </LinearLayout>
 </FrameLayout>

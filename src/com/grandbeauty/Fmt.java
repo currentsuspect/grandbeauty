@@ -38,6 +38,19 @@ public class Fmt {
         return (int) (System.currentTimeMillis() / 86_400_000L);
     }
 
+    public static void rememberPrice(Context c, String service, double amount) {
+        String k = service.trim().toLowerCase(Locale.getDefault());
+        if (k.isEmpty()) return;
+        p(c).edit().putFloat("price_" + k, (float) amount).apply();
+    }
+
+    public static Double priceFor(Context c, String service) {
+        String k = service.trim().toLowerCase(Locale.getDefault());
+        if (k.isEmpty()) return null;
+        float v = p(c).getFloat("price_" + k, -1f);
+        return v < 0 ? null : (double) v;
+    }
+
     public static String timeShort(long ms) {
         return new SimpleDateFormat("h:mm", Locale.getDefault()).format(new Date(ms));
     }

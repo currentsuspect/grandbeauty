@@ -51,6 +51,7 @@ public class SettingsActivity extends Activity {
 
         Switch daily = findViewById(R.id.daily_switch);
         daily.setChecked(Fmt.dailyOn(this));
+        Ui.tintSwitch(daily);
         daily.setOnClickListener(v -> {
             Fmt.setDaily(this, daily.isChecked());
             Alarms.scheduleDaily(this);
@@ -58,6 +59,7 @@ public class SettingsActivity extends Activity {
 
         Switch regulars = findViewById(R.id.regulars_switch);
         regulars.setChecked(Fmt.regularsOn(this));
+        Ui.tintSwitch(regulars);
         regulars.setOnClickListener(v ->
                 Fmt.setRegulars(this, regulars.isChecked()));
 

@@ -36,8 +36,8 @@
         </LinearLayout>
 
         <!-- YOU -->
-        <TextView style="@style/SectionHead" android:text="@string/sec_you"/>
-        <LinearLayout style="@style/Card">
+        <TextView style="@style/SectionHead" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/sec_you"/>
+        <LinearLayout style="@style/Card" android:layout_width="match_parent" android:layout_height="wrap_content">
             <TextView style="@style/FieldLabel" android:text="@string/set_yourname"
                 android:layout_width="match_parent" android:layout_height="wrap_content"
                 android:layout_marginBottom="7dp"/>
@@ -50,8 +50,8 @@
         </LinearLayout>
 
         <!-- REMINDERS -->
-        <TextView style="@style/SectionHead" android:text="@string/sec_reminders"/>
-        <LinearLayout style="@style/Card">
+        <TextView style="@style/SectionHead" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/sec_reminders"/>
+        <LinearLayout style="@style/Card" android:layout_width="match_parent" android:layout_height="wrap_content">
             <TextView style="@style/FieldLabel" android:text="@string/set_lead"
                 android:layout_width="match_parent" android:layout_height="wrap_content"
                 android:layout_marginBottom="9dp"/>
@@ -150,8 +150,8 @@
         </LinearLayout>
 
         <!-- APP -->
-        <TextView style="@style/SectionHead" android:text="@string/sec_app"/>
-        <LinearLayout style="@style/Card">
+        <TextView style="@style/SectionHead" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/sec_app"/>
+        <LinearLayout style="@style/Card" android:layout_width="match_parent" android:layout_height="wrap_content">
             <LinearLayout android:id="@+id/update_row"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -196,8 +196,8 @@
         </LinearLayout>
 
         <!-- DATA -->
-        <TextView style="@style/SectionHead" android:text="@string/sec_data"/>
-        <LinearLayout style="@style/Card">
+        <TextView style="@style/SectionHead" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/sec_data"/>
+        <LinearLayout style="@style/Card" android:layout_width="match_parent" android:layout_height="wrap_content">
             <LinearLayout android:id="@+id/export_row"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

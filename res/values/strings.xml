@@ -90,6 +90,15 @@
 
     <string name="section_attention">Needs attention</string>
     <string name="section_history">History</string>
+
+    <string name="home_stat_today">Today</string>
+    <string name="home_stat_expected">Expected</string>
+    <string name="home_stat_owed">Owed</string>
+    <string name="next_tag">NEXT</string>
+    <plurals name="bookings_count">
+        <item quantity="one">%1$d booking</item>
+        <item quantity="other">%1$d bookings</item>
+    </plurals>
     <string name="owes">Owes %1$s</string>
     <string name="settle">Settle %1$s</string>
     <string name="settled">Balance cleared</string>
@@ -118,6 +127,11 @@
     <string name="update_available">Update to %1$s — tap to install</string>
     <string name="update_downloading">Downloading %1$s…</string>
     <string name="update_failed">Couldn\'t reach updates — check internet</string>
+
+    <string name="undo">Undo</string>
+    <string name="marked_done">Booking marked done</string>
+    <string name="marked_cancelled">Booking marked cancelled</string>
+    <string name="status_reopened">Booking reopened</string>
 
     <string name="err_need_client">Pick or add a client first</string>
     <string name="err_need_service">What is the service?</string>

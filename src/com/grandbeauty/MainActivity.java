@@ -16,6 +16,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +28,26 @@ public class MainActivity extends Activity {
     private View empty;
     private TextView emptyTitle, emptyBody, greeting, title, emptyCta;
     private EditText search;
+    private View stats, undoBar;
+    private TextView sTodayV, sTakeV, sOwedV, undoMsg;
+    private Appt undoAppt;
+    private String undoPrev;
+    private float undoShift;
+    private final android.os.Handler ui = new android.os.Handler(
+            android.os.Looper.getMainLooper());
+    private final Runnable undoHide = new Runnable() {
+        @Override public void run() {
+            undoBar.animate().alpha(0f).setDuration(200)
+                    .withEndAction(new Runnable() {
+                        @Override public void run() {
+                            undoBar.setVisibility(View.GONE);
+                        }
+                    }).start();
+            findViewById(R.id.fab).animate().translationYBy(undoShift)
+                    .setDuration(200).start();
+            undoAppt = null;
+        }
+    };
     private Adapters.ApptsAdapter apptAdapter;
     private Adapters.ClientsAdapter clientAdapter;
     private int tab = TAB_BOOK;
@@ -50,6 +71,31 @@ public class MainActivity extends Activity {
         greeting = findViewById(R.id.greeting);
         title = findViewById(R.id.title);
         search = findViewById(R.id.search);
+        stats = findViewById(R.id.stats);
+        sTodayV = findViewById(R.id.s_today_v);
+        sTakeV = findViewById(R.id.s_take_v);
+        sOwedV = findViewById(R.id.s_owed_v);
+        undoBar = findViewById(R.id.undo_bar);
+        undoMsg = findViewById(R.id.undo_msg);
+
+        findViewById(R.id.undo_btn).setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                if (undoAppt == null) return;
+                Db db = Db.get(MainActivity.this);
+                db.setStatus(undoAppt.id, undoPrev);
+                if (Appt.UP.equals(undoPrev))
+                    Alarms.scheduleFor(MainActivity.this, db.appt(undoAppt.id));
+                else
+                    Alarms.cancelAppt(MainActivity.this, undoAppt.id);
+                ui.removeCallbacks(undoHide);
+                undoHide.run();
+                reload();
+            }
+        });
+
+        findViewById(R.id.s_owed_cell).setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) { setTab(TAB_CLIENTS); }
+        });
 
         findViewById(R.id.empty_cta).setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
@@ -135,21 +181,9 @@ public class MainActivity extends Activity {
                     startActivity(new Intent(MainActivity.this, EditApptActivity.class)
                             .putExtra("id", a.id));
                     break;
-                case 3:
-                    db.setStatus(a.id, Appt.DONE);
-                    Alarms.cancelAppt(MainActivity.this, a.id);
-                    reload();
-                    break;
-                case 4:
-                    db.setStatus(a.id, Appt.CANC);
-                    Alarms.cancelAppt(MainActivity.this, a.id);
-                    reload();
-                    break;
-                case 5:
-                    db.setStatus(a.id, Appt.UP);
-                    Alarms.scheduleFor(MainActivity.this, db.appt(a.id));
-                    reload();
-                    break;
+                case 3: changeStatus(a, Appt.DONE, R.string.marked_done); break;
+                case 4: changeStatus(a, Appt.CANC, R.string.marked_cancelled); break;
+                case 5: changeStatus(a, Appt.UP, R.string.status_reopened); break;
                 case 6:
                     db.settleClient(a.clientId);
                     Toast.makeText(MainActivity.this, R.string.settled,
@@ -246,6 +280,7 @@ public class MainActivity extends Activity {
         if (tab == TAB_BOOK) {
             title.setText(Fmt.dateLong(System.currentTimeMillis()));
             appts = db.appts(query.isEmpty() ? null : query, null);
+            bindStats(db, appts);
             apptAdapter.rebuild(appts);
             list.setAdapter(apptAdapter);
             list.startLayoutAnimation();
@@ -266,6 +301,7 @@ public class MainActivity extends Activity {
             if (!isEmpty) emptyCta.setVisibility(View.VISIBLE);
         } else {
             title.setText(getString(R.string.tab_clients));
+            stats.setVisibility(View.GONE);
             List<Client> clients = db.clients(query.isEmpty() ? null : query);
             for (Appt a : db.appts(null, null)) {
                 if (Appt.UP.equals(a.status) && a.start >= System.currentTimeMillis()) {
@@ -292,6 +328,56 @@ public class MainActivity extends Activity {
                 }
             }
         }
+    }
+
+    private void changeStatus(Appt a, String to, int msgRes) {
+        Db db = Db.get(this);
+        undoPrev = a.status;
+        db.setStatus(a.id, to);
+        if (Appt.UP.equals(to)) Alarms.scheduleFor(this, db.appt(a.id));
+        else Alarms.cancelAppt(this, a.id);
+        undoAppt = db.appt(a.id);
+        undoMsg.setText(msgRes);
+        undoBar.animate().cancel();
+        undoBar.setAlpha(1f);
+        undoBar.setVisibility(View.VISIBLE);
+        final View fab = findViewById(R.id.fab);
+        undoBar.post(new Runnable() {
+            @Override public void run() {
+                undoShift = undoBar.getHeight() + Math.round(
+                        12 * getResources().getDisplayMetrics().density);
+                fab.animate().translationYBy(-undoShift).setDuration(200).start();
+            }
+        });
+        ui.removeCallbacks(undoHide);
+        ui.postDelayed(undoHide, 4500);
+        reload();
+    }
+
+    private void bindStats(Db db, List<Appt> appts) {
+        boolean show = tab == TAB_BOOK && query.isEmpty() && !appts.isEmpty();
+        stats.setVisibility(show ? View.VISIBLE : View.GONE);
+        if (!show) return;
+
+        Calendar c = Calendar.getInstance();
+        Fmt.clearTime(c);
+        long dayStart = c.getTimeInMillis();
+        long dayEnd = dayStart + 86_400_000L;
+
+        int today = 0;
+        double expected = 0;
+        for (Appt a : appts) {
+            if (a.start >= dayStart && a.start < dayEnd && Appt.UP.equals(a.status)) {
+                today++;
+                if (a.amount != null) expected += a.amount;
+            }
+        }
+
+        sTodayV.setText(String.valueOf(today));
+        sTakeV.setText(Fmt.money(expected).isEmpty()
+                ? "0" : Fmt.money(expected));
+        double owed = db.totalOwed();
+        sOwedV.setText(owed < 1 ? "—" : Fmt.money(owed));
     }
 
     private void requestNotifPermIfNeeded() {

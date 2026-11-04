@@ -8,7 +8,7 @@
         android:layout_width="30dp"
         android:layout_height="match_parent">
 
-        <View
+        <View android:id="@+id/rail_line"
             android:layout_width="2dp"
             android:layout_height="match_parent"
             android:layout_gravity="center_horizontal"
@@ -29,7 +29,7 @@
         android:layout_marginTop="4dp" android:layout_marginBottom="4dp"
         android:layout_marginRight="4dp"
         android:orientation="vertical"
-        android:background="@drawable/bg_card_ripple"
+        android:background="@drawable/bg_card"
         android:paddingLeft="14dp" android:paddingRight="10dp"
         android:paddingTop="10dp" android:paddingBottom="10dp">
 
@@ -49,6 +49,20 @@
 
             <Space android:layout_width="0dp" android:layout_height="1dp"
                 android:layout_weight="1"/>
+
+            <TextView android:id="@+id/next_pill"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="6dp"
+                android:paddingLeft="8dp" android:paddingRight="8dp"
+                android:paddingTop="3dp" android:paddingBottom="3dp"
+                android:text="@string/next_tag"
+                android:textSize="10sp"
+                android:visibility="gone"
+                android:textColor="@color/on_secondary_container"
+                android:fontFamily="sans-serif-medium"
+                android:letterSpacing="0.08"
+                android:background="@drawable/bg_settle"/>
 
             <TextView android:id="@+id/status_pill"
                 android:layout_width="wrap_content"
@@ -84,6 +98,5 @@
         android:layout_width="34dp"
         android:layout_height="match_parent"
         android:scaleType="center"
-        android:src="@drawable/ic_dots_s"
-        android:background="?android:attr/selectableItemBackgroundBorderless"/>
+        android:src="@drawable/ic_dots_s"/>
 </LinearLayout>

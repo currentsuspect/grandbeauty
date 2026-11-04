@@ -9,6 +9,10 @@ Android (API 24+, targets 36). No Gradle; the whole build peaks ~600MB RAM.
   pink + gold + charcoal palette
 - Bookings: day-grouped list, "Needs attention" section for unmarked past
   bookings, 60-day History, quick mark-done, search (name/service/phone)
+- Home stat band (today / expected / owed), NEXT tag, per-day counts+totals,
+  tap card or dots for quick actions, tap a day header to prefill a booking
+- Undo bar: status changes (done/cancelled/reopen) reversible for ~5s
+- Price memory: amount pre-fills from the last price used for that service
 - Clients: initials avatar, call/SMS/WhatsApp, stats (visits/total/balance),
   one-tap debt settle, per-client booking history
 - Debt tracking: charge vs paid per booking, gold "Owes" badges, salon-wide
